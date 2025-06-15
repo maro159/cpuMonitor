@@ -7,7 +7,10 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 add_executable(unit_tests
+    DummyTest.cpp
     StatsReaderTest.cpp
+    SnapshotQueueTest.cpp
+    DataWriterTest.cpp
 )
 
 target_link_libraries(unit_tests PRIVATE
