@@ -14,12 +14,9 @@ void ConsoleDataWriter::write(CpuSnapshot const &snapshot) {
     std::cout << "\r";
     std::ostringstream oss;
     for (size_t i = 0; i < snapshot.coresUsage.size(); ++i) {
-        oss << "CPU" << i << ": " << snapshot.coresUsage[i] << "% ";
+        oss << "CPU" << i << ": " << std::fixed << std::setprecision(2) << snapshot.coresUsage[i] << "% ";
     }
-    oss << "TOTAL: " << snapshot.totalUsage << "%";
-    // Pad with enough spaces to clear previous content
-    constexpr int pad = 32;
-    oss << std::string(pad, ' ');
+    oss << "TOTAL: " << std::fixed << std::setprecision(2) << snapshot.totalUsage << "%";
     std::cout << oss.str() << std::flush;
 }
 
@@ -38,13 +35,12 @@ void CsvDataWriter::write(CpuSnapshot const &snapshot) {
         headerWritten_ = true;
     }
 
-    // assuming core sequence is consistent between snapshots
     auto timestamp = std::chrono::system_clock::to_time_t(snapshot.timestamp);
     file_ << timestamp << ",";
     for (const auto &usage : snapshot.coresUsage) {
-        file_ << usage << ",";
+        file_ << std::fixed << usage << ",";
     }
-    file_ << snapshot.totalUsage << "\n";
+    file_ << std::fixed << snapshot.totalUsage << "\n";
 }
 
 } // namespace cpuMonitor
