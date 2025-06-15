@@ -5,12 +5,10 @@
 namespace mp {
 namespace cpuMonitor {
 
-using CpuCoreUsage = double;
-
 struct CpuSnapshot {
     std::chrono::system_clock::time_point timestamp{};
-    std::vector<CpuCoreUsage> coresUsage{};
-    CpuCoreUsage totalUsage{};
+    std::vector<double> coresUsage{};
+    double totalUsage{};
 };
 
 } // namespace cpuMonitor
