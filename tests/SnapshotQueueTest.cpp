@@ -47,8 +47,12 @@ TEST(SnapshotQueueTest, PushPopSingleThread) {
     queue.pushSnapshot(s1);
     queue.pushSnapshot(s2);
     EXPECT_EQ(queue.size(), 2u);
-    EXPECT_EQ(queue.popSnapshot().totalUsage, 1);
-    EXPECT_EQ(queue.popSnapshot().totalUsage, 2);
+    auto snap1 = queue.popSnapshot();
+    auto snap2 = queue.popSnapshot();
+    EXPECT_EQ(snap1.totalUsage, 10);
+    EXPECT_EQ(snap1.coresUsage[0], 1);
+    EXPECT_EQ(snap2.totalUsage, 20);
+    EXPECT_EQ(snap2.coresUsage[0], 2);
     EXPECT_TRUE(queue.empty());
 }
 
@@ -94,5 +98,6 @@ TEST(SnapshotQueueTest, TimedPopReturnsValueIfAvailable) {
     queue.pushSnapshot(makeSnapshot(42));
     auto result = queue.popSnapshot(std::chrono::milliseconds(100));
     ASSERT_TRUE(result.has_value());
-    EXPECT_EQ(result->totalUsage, 42);
+    EXPECT_EQ(result->totalUsage, 42 * 10);
+    EXPECT_EQ(result->coresUsage[0], 42);
 }

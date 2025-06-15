@@ -39,9 +39,7 @@ TEST(StatsReaderTest, HandlesInvalidInput) {
 TEST(StatsReaderTest, HandlesMissingFields) {
     std::string missingFields = "cpu 100 200 300\n"; // Missing idle and other fields
     std::istringstream iss(missingFields);
-    auto snapshot = StatsReader::parseStatStream(iss);
-    EXPECT_EQ(snapshot.totalUsage, 0.0); // No idle time means no usage can be calculated
-    EXPECT_TRUE(snapshot.coresUsage.empty());
+    EXPECT_ANY_THROW(StatsReader::parseStatStream(iss));
 }
 
 TEST(StatsReaderTest, ParsesMinimumFields_CorrectUsage) {
