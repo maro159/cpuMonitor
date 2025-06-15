@@ -15,15 +15,26 @@ struct CpuTimes {
     uint64_t user{0}, nice{0}, system{0}, idle{0}, iowait{0}, irq{0}, softirq{0}, steal{0}, guest{0}, guestNice{0};
     uint64_t active() const { return user + nice + system + irq + softirq + steal + guest + guestNice; }
     uint64_t total() const { return active() + idle + iowait; }
-};
-} // namespace
-
-static double calcPercentUsage(const CpuTimes &cpu) {
-    if (cpu.total() == 0) {
-        return 0.0;
+    double percentUsage() const {
+        const auto totalTicks = total();
+        if (totalTicks == 0)
+            return 0.0;
+        return static_cast<double>(active()) / static_cast<double>(totalTicks) * 100.0;
     }
-    return static_cast<double>(cpu.active()) / static_cast<double>(cpu.total()) * 100.0;
+};
+
+CpuTimes parseCpuTimesFromStream(std::istream &iss) {
+    CpuTimes times{};
+    // Try to parse mandatory fields
+    if (!(iss >> times.user >> times.nice >> times.system >> times.idle)) {
+        throw std::runtime_error{"/proc/stat line has fewer than 4 mandatory fields (user, nice, system, idle)"};
+    }
+    // Parse optional fields if present
+    iss >> times.iowait >> times.irq >> times.softirq >> times.steal >> times.guest >> times.guestNice;
+    return times;
 }
+
+} // namespace
 
 CpuSnapshot StatsReader::getSnapshot() {
     std::ifstream stat("/proc/stat");
@@ -42,9 +53,8 @@ CpuSnapshot StatsReader::parseStatStream(std::istream &statStream) {
         if (line.starts_with("cpu")) {
             std::istringstream iss(line);
             std::string label;
-            CpuTimes times{};
-            iss >> label >> times.user >> times.nice >> times.system >> times.idle >> times.iowait >> times.irq >>
-                times.softirq >> times.steal;
+            iss >> label;
+            CpuTimes times = parseCpuTimesFromStream(iss);
             if (label == "cpu") {
                 totalCpu = std::move(times);
             } else {
@@ -57,9 +67,9 @@ CpuSnapshot StatsReader::parseStatStream(std::istream &statStream) {
 
     snapshot.coresUsage.reserve(coresCpu.size());
     for (const auto &core : coresCpu) {
-        snapshot.coresUsage.emplace_back(calcPercentUsage(core));
+        snapshot.coresUsage.emplace_back(core.percentUsage());
     }
-    snapshot.totalUsage = calcPercentUsage(totalCpu);
+    snapshot.totalUsage = totalCpu.percentUsage();
 
     return snapshot;
 }
