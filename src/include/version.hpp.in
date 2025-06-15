@@ -1,0 +1,10 @@
+#pragma once
+#include <string_view>
+
+namespace mp::cpuMonitor::helpers {
+constexpr std::string_view kGitCommitHashStr = "@GIT_COMMIT_HASH@";
+constexpr std::string_view kProjectNameStr = "@PROJECT_NAME@";
+constexpr std::string_view kProjectVersionStr = "@PROJECT_VERSION@";
+constexpr std::string_view kProjectDescriptionStr = "@PROJECT_DESCRIPTION@";
+
+} // namespace mp::cpuMonitor::helpers
