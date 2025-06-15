@@ -2,4 +2,6 @@ add_executable(cpuMonitor
     main.cpp
 )
 
-include_directories(../include)
+target_include_directories(cpuMonitor PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)

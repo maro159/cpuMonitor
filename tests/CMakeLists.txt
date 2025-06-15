@@ -6,13 +6,13 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-add_executable(
-    unit_tests
-    test_main.cpp
+add_executable(unit_tests
+    StatsReaderTest.cpp
 )
-target_link_libraries(
-    unit_tests
+
+target_link_libraries(unit_tests PRIVATE
     GTest::gtest_main
+    cpuMonitorLib
 )
 
 include(GoogleTest)
