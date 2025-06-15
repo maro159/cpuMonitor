@@ -12,11 +12,13 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
-
 option(UNIT_TESTS "Configure unit tests" ${PROJECT_IS_TOP_LEVEL})
 
-set(CMAKE_C_STANDARD 23)
-set(CMAKE_C_STANDARD_REQUIRED ON)
+if(UNIT_TESTS)
+    message(STATUS "Unit tests ENABLED")
+else()
+    message(STATUS "Unit tests DISABLED")
+endif()
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -28,6 +30,7 @@ add_compile_options(
     -Wconversion -Wnull-dereference -Wduplicated-cond -Wsign-conversion -Wlogical-op
 )
 
+add_subdirectory(lib/cpuMonitorLib)
 add_subdirectory(src)
 
 if(UNIT_TESTS)
