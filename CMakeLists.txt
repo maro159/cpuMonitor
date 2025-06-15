@@ -7,6 +7,12 @@ project(cpuMonitor
     LANGUAGES C CXX
 )
 
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+
 option(UNIT_TESTS "Configure unit tests" ${PROJECT_IS_TOP_LEVEL})
 
 set(CMAKE_C_STANDARD 23)
@@ -28,5 +34,3 @@ if(UNIT_TESTS)
     include(CTest)
     add_subdirectory(tests)
 endif()
-
-set(CMAKE_COLOR_DIAGNOSTICS ON)
