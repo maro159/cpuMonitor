@@ -22,7 +22,7 @@ public:
 
 class CsvDataWriter : public IDataWriter {
 public:
-    CsvDataWriter(std::string_view &filename);
+    CsvDataWriter(std::string_view filename);
     void write(CpuSnapshot const &snapshot) override;
 
 private:

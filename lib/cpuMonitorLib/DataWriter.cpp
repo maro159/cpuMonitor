@@ -7,7 +7,7 @@ namespace cpuMonitor {
 
 ConsoleDataWriter::ConsoleDataWriter() { std::cout << "\n"; }
 
-CsvDataWriter::CsvDataWriter(std::string_view &filename) { file_.open(filename.data(), std::ios::out | std::ios::app); }
+CsvDataWriter::CsvDataWriter(std::string_view filename) { file_.open(filename.data(), std::ios::out | std::ios::app); }
 
 void ConsoleDataWriter::write(CpuSnapshot const &snapshot) {
     // Move cursor to the beginning of the line
