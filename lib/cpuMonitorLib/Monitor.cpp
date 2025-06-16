@@ -38,7 +38,8 @@ void Monitor::addWriter(std::unique_ptr<IDataWriter> writer) {
 void Monitor::readerThreadFunc(std::stop_token st) {
     while (!st.stop_requested()) {
         auto snapshot = reader_.getSnapshot();
-        queue_.pushSnapshot(snapshot);
+        if (snapshot.has_value())
+            queue_.pushSnapshot(snapshot.value()); // Pass the value if present
         std::this_thread::sleep_for(refreshInterval_);
     }
 }
@@ -47,7 +48,7 @@ void Monitor::loggerThreadFunc(std::stop_token st) {
     while (!st.stop_requested()) {
         // Wait for a snapshot to be available or timeout
         auto optSnapshot = queue_.popSnapshot(refreshInterval_);
-        if (optSnapshot) {
+        if (optSnapshot.has_value()) {
             for (const auto &writer : writers_) {
                 writer->write(*optSnapshot);
             }
