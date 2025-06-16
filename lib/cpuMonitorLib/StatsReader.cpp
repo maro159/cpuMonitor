@@ -53,6 +53,7 @@ std::optional<CpuSnapshot> StatsReader::getSnapshot(std::istream &stat) {
     std::string line;
     std::vector<CpuTimes> coresCpu;
     CpuTimes totalCpu{};
+    bool foundCpu = false;
 
     while (std::getline(stat, line)) {
         if (!line.starts_with("cpu"))
@@ -62,6 +63,7 @@ std::optional<CpuSnapshot> StatsReader::getSnapshot(std::istream &stat) {
         iss >> label;
         try {
             CpuTimes times = parseCpuTimesFromStream(iss);
+            foundCpu = true;
             if (label == "cpu") {
                 totalCpu = std::move(times);
             } else {
@@ -71,6 +73,11 @@ std::optional<CpuSnapshot> StatsReader::getSnapshot(std::istream &stat) {
             std::cerr << "Error parsing CPU times: " << e.what() << std::endl;
             return std::nullopt; // Parsing error, return empty optional
         }
+    }
+
+    // If no valid cpu lines were found, return nullopt
+    if (!foundCpu) {
+        return std::nullopt;
     }
 
     // no previous result, store current values and return empty
