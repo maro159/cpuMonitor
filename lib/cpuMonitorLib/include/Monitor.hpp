@@ -34,6 +34,13 @@ public:
      */
     void addWriter(std::unique_ptr<IDataWriter> writer);
 
+    // don't allow copying or moving
+    Monitor(const Monitor&) = delete;
+    Monitor& operator=(const Monitor&) = delete;
+    Monitor(Monitor&&) = delete;
+    Monitor& operator=(Monitor&&) = delete;
+
+
 private:
     void readerThreadFunc(std::stop_token stopToken);
     void loggerThreadFunc(std::stop_token stopToken);
