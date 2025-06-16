@@ -16,7 +16,7 @@ inline void printVersion() { std::cout << kProjectNameStr << " " << kProjectVers
 
 inline int parseInterval(int argc, char *argv[], int defaultMs) {
     for (int i = 1; i < argc; ++i) {
-        std::string arg = argv[i];
+        std::string_view arg = argv[i];
         if ((arg == "--interval") && (i + 1 < argc)) {
             try {
                 int ms = std::stoi(argv[++i]);
@@ -34,7 +34,7 @@ inline int parseInterval(int argc, char *argv[], int defaultMs) {
 
 inline bool handleMetaArgs(int argc, char *argv[]) {
     for (int i = 1; i < argc; ++i) {
-        std::string arg = argv[i];
+        std::string_view arg = argv[i];
         if (arg == "--help" || arg == "-h") {
             printHelp();
             return true;

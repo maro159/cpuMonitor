@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16)
 include(CMakePrintHelpers)
 
 project(cpuMonitor
-    VERSION 0.2.0
+    VERSION 0.2.1
     DESCRIPTION "A multithreaded application for measuring CPU usage on Linux"
     LANGUAGES C CXX
 )

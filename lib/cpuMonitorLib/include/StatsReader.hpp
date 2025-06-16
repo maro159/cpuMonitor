@@ -1,9 +1,11 @@
 #pragma once
+
 #include "common.hpp"
+
+#include <fstream>
 #include <istream>
 #include <optional>
 #include <vector>
-#include <fstream>
 
 namespace mp {
 namespace cpuMonitor {
@@ -18,14 +20,7 @@ struct CpuTimes {
 class StatsReader {
 public:
     StatsReader();
-    std::optional<CpuSnapshot> getSnapshot()
-    {
-        std::ifstream stat("/proc/stat");
-        if (!stat.is_open()) {
-            return std::nullopt; // Could not open /proc/stat
-        }
-        return getSnapshot(stat);
-    }
+    std::optional<CpuSnapshot> getSnapshot();
     std::optional<CpuSnapshot> getSnapshot(std::istream &stat);
 
 private:

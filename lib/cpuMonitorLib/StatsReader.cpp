@@ -48,6 +48,14 @@ double StatsReader::calcUsagePercent(const CpuTimes &prev, const CpuTimes &curr)
     return static_cast<double>(activeDelta) / static_cast<double>(totalDelta) * 100.0;
 }
 
+std::optional<CpuSnapshot> StatsReader::getSnapshot() {
+    std::ifstream stat("/proc/stat");
+    if (!stat.is_open()) {
+        return std::nullopt; // Could not open /proc/stat
+    }
+    return getSnapshot(stat);
+}
+
 std::optional<CpuSnapshot> StatsReader::getSnapshot(std::istream &stat) {
     const auto timestamp = std::chrono::system_clock::now();
     std::string line;
