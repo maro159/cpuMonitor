@@ -12,3 +12,7 @@ target_link_libraries(cpuMonitor PRIVATE
 )
 
 configure_file(include/version.hpp.in version.hpp)
+
+add_custom_command(TARGET cpuMonitor POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E create_symlink $<TARGET_FILE:cpuMonitor> ${CMAKE_BINARY_DIR}/cpuMonitor
+)
