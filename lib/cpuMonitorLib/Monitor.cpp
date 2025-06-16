@@ -22,11 +22,14 @@ void Monitor::start() {
 void Monitor::stop() {
     readerThread_.request_stop();
     loggerThread_.request_stop();
-    // jthreads are automatically joined on destruction
-    // if (readerThread_.is_joinable())
-    //     readerThread_.join();
-    // if (loggerThread_.is_joinable())
-    //     loggerThread_.join();
+    // Wait for threads to finish
+    if (readerThread_.joinable()) {
+        readerThread_.join();
+    }
+    if (loggerThread_.joinable()) {
+        loggerThread_.join();
+    }
+    // jthreads are automatically joined on destruction, but we join explicitly here for prompt shutdown
 }
 
 void Monitor::addWriter(std::unique_ptr<IDataWriter> writer) {
